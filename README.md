@@ -1,6 +1,6 @@
 # vue-movie
 
-> A Vue.js project
+> A Vue.js project.未完待续
 
 ## Build Setup
 
