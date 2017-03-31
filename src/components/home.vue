@@ -14,11 +14,13 @@
     <div id="movie-list"  style="padding: 50px">
       <MovieList :searchRes="searchRes"></MovieList>
     </div>
+    <infinite-loading :on-infinite="onInfinite" ref="infiniteLoading" v-if="searchRes.count"></infinite-loading>
   </div>
 </template>
 
 <script>
   import axios from 'axios'
+  import InfiniteLoading from 'vue-infinite-loading';
   import MovieList from './movie-list'
 
   export default {
@@ -31,25 +33,40 @@
         keywords: "",
         searchRes: {},
         searchType: "",
-        loadingFlag: false
+        loadingFlag: false,
+        nextStart: 0
       }
     },
     methods: {
       onSearch() {
+        this.nextStart = 0;
+
         let self = this;
-        let url = 'https:/api.douban.com/v2/movie/search?count=4&q=' + this.keywords;
+        let url = `https:/api.douban.com/v2/movie/search?start=${this.nextStart}&count=4&q=` + this.keywords;
         this.loadingFlag = true;
         this.searchRes = {};
+
         axios.get(url)
           .then(function(res) {
             self.loadingFlag = false;
             self.searchRes = res.data;
-            console.log(res.data);
           })
-      }
+      },
+      onInfinite() {
+        this.nextStart += 4;
+        let self = this;
+        let url = `https:/api.douban.com/v2/movie/search?start=${this.nextStart}&count=4&q=` + this.keywords;
+
+        axios.get(url)
+          .then(function(res) {
+            self.searchRes.subjects = self.searchRes.subjects.concat(res.data.subjects);
+            self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+          })
+      },
     },
     components: {
-      MovieList
+      MovieList,
+      InfiniteLoading
     }
   }
 </script>
