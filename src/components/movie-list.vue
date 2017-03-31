@@ -1,9 +1,12 @@
 <template>
   <div>    
     <el-row >
-      <movie-card v-for="item in movieInfo" :key="item" :currentMovieInfo="item"></movie-card>
+      <h3 v-if="searchRes.title">{{searchRes.title}}：</h3>
     </el-row>
-    <pre>{{movieInfo}}</pre>
+    <div style="padding: 10px 150px 0 150px">
+      <!--<pre>{{searchRes}}</pre>-->
+      <movie-card v-for="item in searchRes.subjects" :key="item.id" :movieInfo="item"></movie-card>
+    </div>
   </div>
 </template>
 
@@ -12,7 +15,7 @@
 
   export default {
     name: "movie-list",
-    props: ["movieInfo"],
+    props: ["searchRes"],
     data() {
       return {
 
