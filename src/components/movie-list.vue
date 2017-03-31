@@ -1,7 +1,7 @@
 <template>
   <div>    
     <el-row >
-      <h3 v-if="searchRes.title">{{searchRes.title}}：</h3>
+      <h3 v-if="searchRes.title" style="padding-left: 150px">{{searchRes.title}}：</h3>
     </el-row>
     <div style="padding: 10px 150px 0 150px">
       <movie-card v-for="item in searchRes.subjects" :key="item.id" :movieInfo="item"></movie-card>
