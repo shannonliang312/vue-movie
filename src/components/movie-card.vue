@@ -9,8 +9,8 @@
         <div>原名： {{movieInfo.original_title}}</div>
         <div>类型： {{movieInfo.subtype}}</div>
         <div>上映时间： {{movieInfo.year}}</div>
-        <div>导演：<span v-for="director in movieInfo.directors">{{director.name}}&nbsp;&nbsp;</span></div>
-        <div>主演：<span v-for="cast in movieInfo.casts">{{cast.name}}&nbsp;&nbsp;</span></div>
+        <div>导演：<span class="human" v-for="director in movieInfo.directors">{{director.name}}&nbsp;&nbsp;</span></div>
+        <div>主演：<span class="human" v-for="cast in movieInfo.casts">{{cast.name}}&nbsp;&nbsp;</span></div>
         <div>标签：<span v-for="genre in movieInfo.genres">{{genre}}&nbsp;&nbsp;</span></div>
         <div>收藏数量： {{movieInfo.collect_count}}</div>
         <div>评分：
@@ -26,23 +26,30 @@
           </el-rate>
         </div> 
         <div>
-          <el-button size="small" @click="showDetail">详细信息</el-button>
+          <!--el-button size="small" @click="showDetailInfo">详细信息</el-button-->
+          <button class="detail-button" @click="showDetailInfo">详细信息</button>
         </div>  
       </div>    
     </div>
-    <el-dialog id="detail-box" v-model="dialogVisible" :title="movieInfo.title">
-      <el-row v-if="detailLoadingFlag">
+    <el-dialog id="detail-dialog" class="dialog-box" v-model="detailDialogVisible" :title="movieInfo.title">
+      <el-row v-if="dialogLoadingFlag">
         正在加载中...
       </el-row>
-      <div v-if="!detailLoadingFlag">
+      <div class="dialog-body" v-if="!dialogLoadingFlag">
         <div>国家：<span v-for="country in detailInfo.countries">{{country}}&nbsp;&nbsp;</span></div>
         <div v-if="detailInfo.episodes_count">本季集数：{{detailInfo.episodes_count}}集</div>
-        <div >简介：
+        <div>简介：
           <p>{{detailInfo.summary}}</p>
         </div>
-      </div>
-      
+        <div>
+          <div v-for="cast in detailInfo.casts" class="detail-cast-avatar">
+            <img style="border-radius: 50%;"  :src="cast.avatars.medium">
+            <div>{{cast.name}}</div>
+          </div>          
+        </div>
+      </div>      
     </el-dialog>
+
   </div>
      
 </template>
@@ -56,8 +63,11 @@
     data() {
       return {
         dialogVisible: false,
-        detailLoadingFlag: true,
-        detailInfo: {}
+        dialogLoadingFlag: true,
+        detailInfo: {},
+        detailDialogVisible: false,
+        actorDialogVisible: false,
+        directorDialogVisible: false
       }
     },
     computed: {
@@ -66,17 +76,19 @@
       }
     },
     methods: {
-      showDetail() {
+      showDetailInfo() {
         let url = `https://api.douban.com/v2/movie/subject/${this.movieInfo.id}`;
-        this.dialogVisible = true;
+        this.detailDialogVisible = true;        
 
         axios.get(url)
           .then((res)=>{
-            // console.log(res.data);
+            console.log(res.data);
             this.detailInfo = res.data;
-            this.detailLoadingFlag = false;
+            this.dialogLoadingFlag = false;
           });
       }
+    },
+    components: {
     }
   }  
 </script>
@@ -100,6 +112,11 @@
     margin: 10px 30px 10px 0;
   }
 
+  img:hover {
+    box-shadow: 5px 5px 5px #475669;
+    cursor: pointer;
+  }
+
   .m-info {
     margin-top: 10px
   }
@@ -108,7 +125,36 @@
     margin-bottom: 10px;
   }
 
-  #detail-box div {
+  .detail-button {
+    padding: 5px 8px;
+    background-color: transparent;
+    color: white;
+    border-radius: 10%;
+  }
+
+  .detail-button:hover {
+    cursor: pointer;
+  }
+
+  .dialog-body {
     padding: 10px 20px;
+  }
+
+  .dialog-body > div {
+    padding: 10px 0
+  }
+
+  .human {
+    color:aqua;
+  }
+
+  .human:hover {
+    cursor: pointer;
+  }
+
+  .detail-cast-avatar {
+    display: inline-block; 
+    text-align: center;
+    margin-left: 18px;
   }
 </style>

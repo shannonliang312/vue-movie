@@ -1,11 +1,10 @@
 <template>
   <div>
-    <h1>Find your favorate movie!</h1>
+    <h1>Find your favorate TV show!</h1>
     <el-row>
       <el-col  :span="12" :offset="6">
-        <el-input v-model="keywords" @keyup.native.enter="onSearch" placeholder="请输入">
-          <el-button slot="append" icon="search" @click="onSearch"></el-button>
-        </el-input>
+        <input type="text" @keyup.enter="onSearch" v-model="keywords" placeholder="" id="searchInput">
+        <i class="fa fa-search fa-2x search-icon" aria-hidden="true" @click="onSearch"></i>   
       </el-col>
     </el-row>    
     <div v-if="loadingFlag" style="text-align: center;">
@@ -29,8 +28,8 @@
 
   export default {
     name: "home",
-    created: function() {
-      
+    mounted: function() {
+      document.getElementById("searchInput").focus();
     },
     data() {
       return {
@@ -46,6 +45,7 @@
     methods: {
       onSearch() {
         this.nextStart = 0;
+        this.exceptionFlag = false;
 
         let url = `https:/api.douban.com/v2/movie/search?start=${this.nextStart}&count=4&q=` + this.keywords;
         this.loadingFlag = true;
@@ -54,7 +54,7 @@
         axios.get(url)
           .then((res) => {
             this.loadingFlag = false;
-            if (res.data.length != 0) {
+            if (res.data.subjects.length != 0) {
               this.searchRes = res.data;
               this.exceptionFlag = false;
             }
@@ -119,4 +119,41 @@
     font-family: Chewy;
     font-size: 5em;
   }
+
+  input {
+    outline: none;
+    color: white;
+    font-size: 2em;
+    text-align: center;
+    background-color: transparent;
+    width: 90%;
+    border: 0;
+    border-bottom: white 1px solid; 
+  }
+
+  .search-icon:hover {
+    cursor: pointer;
+  }
+
+  ::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #C0CCDA;
+    font-style:italic;
+    font-size: 1em;
+  }
+  :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color:    #C0CCDA;
+      font-style:italic;
+      font-size: 1em;
+  }
+  ::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color:    #C0CCDA;
+      font-style:italic;
+      font-size: 1em;
+  }
+  :-ms-input-placeholder { /* Internet Explorer 10+ */
+      color:    #C0CCDA;
+      font-style:italic;
+      font-size: 1em;
+  }
+
 </style>
