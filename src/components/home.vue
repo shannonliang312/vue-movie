@@ -1,6 +1,13 @@
 <template>
-  <div>
-    <h1>Find your favorate TV show!</h1>
+  <div>    
+    <transition 
+      appear
+      name="custom-classes-transition"
+      enter-active-class="animated rotateIn"      
+      >
+      <h1>Find your favorate TV show!</h1>
+    </transition>
+    
     <el-row>
       <el-col  :span="12" :offset="6">
         <input type="text" @keyup.enter="onSearch" v-model="keywords" placeholder="" id="searchInput">
@@ -109,10 +116,14 @@
   }
 
   h1 {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 30px;
     font-family: Chewy;
     text-align: center;
     font-size: 4em;
+    overflow-x: hidden;
   }
 
   .oops {

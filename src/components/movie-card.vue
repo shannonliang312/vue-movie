@@ -35,19 +35,24 @@
       <el-row v-if="dialogLoadingFlag">
         正在加载中...
       </el-row>
-      <div class="dialog-body" v-if="!dialogLoadingFlag">
-        <div>国家：<span v-for="country in detailInfo.countries">{{country}}&nbsp;&nbsp;</span></div>
-        <div v-if="detailInfo.episodes_count">本季集数：{{detailInfo.episodes_count}}集</div>
-        <div>简介：
-          <p>{{detailInfo.summary}}</p>
+      <!--<transition 
+        name="custom-classes-transition"
+        enter-active-class="animated fadeIn"      
+        >-->
+        <div class="dialog-body" v-if="!dialogLoadingFlag">
+          <div>国家：<span v-for="country in detailInfo.countries">{{country}}&nbsp;&nbsp;</span></div>
+          <div v-if="detailInfo.episodes_count">本季集数：{{detailInfo.episodes_count}}集</div>
+          <div>简介：
+            <p>{{detailInfo.summary}}</p>
+          </div>
+          <div>
+            <div v-for="cast in detailInfo.casts" class="detail-dialog-avatar">
+              <img style="border-radius: 50%;"  :src="cast.avatars.medium">
+              <div>{{cast.name}}</div>
+            </div>          
+          </div>
         </div>
-        <div>
-          <div v-for="cast in detailInfo.casts" class="detail-dialog-avatar">
-            <img style="border-radius: 50%;"  :src="cast.avatars.medium">
-            <div>{{cast.name}}</div>
-          </div>          
-        </div>
-      </div>      
+      <!--</transition>      -->
     </el-dialog>
     <el-dialog id="cast-dialog" class="dialog-box" v-model="castDialogVisible" :title="castInfo.name">
       <el-row v-if="dialogLoadingFlag">
@@ -95,12 +100,13 @@
     methods: {
       showDetailInfo() {
         let url = `https://api.douban.com/v2/movie/subject/${this.movieInfo.id}`;
-        this.detailDialogVisible = true;        
+        
         this.dialogLoadingFlag = true;
+        this.detailDialogVisible = true;        
 
         axios.get(url)
           .then((res)=>{
-            // console.log(res.data);
+            console.log(res.data);
             this.detailInfo = res.data;
             this.dialogLoadingFlag = false;
           });
@@ -108,8 +114,9 @@
       showCastInfo(cast) {
         // console.log(cast);
         let url = `https://api.douban.com/v2/movie/celebrity/${cast.id}`;
-        this.castDialogVisible = true;
+        
         this.dialogLoadingFlag = true;
+        this.castDialogVisible = true;
 
         axios.get(url)
           .then((res) => {

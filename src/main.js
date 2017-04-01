@@ -8,6 +8,8 @@ Vue.config.productionTip = false
 
 import ElementUI from 'element-ui'
 import Promise from 'promise-polyfill'
+
+import 'animate.css/animate.min.css'
 import 'element-ui/lib/theme-default/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 import './assets/css/style.css'
