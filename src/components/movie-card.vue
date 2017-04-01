@@ -10,7 +10,7 @@
         <div>类型： {{movieInfo.subtype}}</div>
         <div>上映时间： {{movieInfo.year}}</div>
         <div>导演：<span class="human" v-for="director in movieInfo.directors">{{director.name}}&nbsp;&nbsp;</span></div>
-        <div>主演：<span class="human" v-for="cast in movieInfo.casts">{{cast.name}}&nbsp;&nbsp;</span></div>
+        <div>主演：<span class="human" v-for="cast in movieInfo.casts" @click="showCastInfo(cast)">{{cast.name}}&nbsp;&nbsp;</span></div>
         <div>标签：<span v-for="genre in movieInfo.genres">{{genre}}&nbsp;&nbsp;</span></div>
         <div>收藏数量： {{movieInfo.collect_count}}</div>
         <div>评分：
@@ -42,12 +42,28 @@
           <p>{{detailInfo.summary}}</p>
         </div>
         <div>
-          <div v-for="cast in detailInfo.casts" class="detail-cast-avatar">
+          <div v-for="cast in detailInfo.casts" class="detail-dialog-avatar">
             <img style="border-radius: 50%;"  :src="cast.avatars.medium">
             <div>{{cast.name}}</div>
           </div>          
         </div>
       </div>      
+    </el-dialog>
+    <el-dialog id="cast-dialog" class="dialog-box" v-model="castDialogVisible" :title="castInfo.name">
+      <el-row v-if="dialogLoadingFlag">
+        正在加载中...
+      </el-row>
+      <div class="dialog-body" v-if="!dialogLoadingFlag">
+        <div class="cast-dialog-avatar">
+          <img :src="castInfo.avatars.medium" style="border-radius: 20%;">
+        </div>
+        <div class="cast-dialog-info">
+          <div v-if="castInfo.name_en">英文名：{{castInfo.name_en}}</div>
+          <div>性别：{{castInfo.gender}}</div>
+          <div>出生地：{{castInfo.born_place}}</div>
+          <div>主要作品：<span v-for="work in castInfo.works">{{work.subject.title}}&nbsp;&nbsp;</span></div>
+        </div>
+      </div>
     </el-dialog>
 
   </div>
@@ -65,8 +81,9 @@
         dialogVisible: false,
         dialogLoadingFlag: true,
         detailInfo: {},
+        castInfo: {},
         detailDialogVisible: false,
-        actorDialogVisible: false,
+        castDialogVisible: false,
         directorDialogVisible: false
       }
     },
@@ -79,11 +96,24 @@
       showDetailInfo() {
         let url = `https://api.douban.com/v2/movie/subject/${this.movieInfo.id}`;
         this.detailDialogVisible = true;        
+        this.dialogLoadingFlag = true;
 
         axios.get(url)
           .then((res)=>{
-            console.log(res.data);
+            // console.log(res.data);
             this.detailInfo = res.data;
+            this.dialogLoadingFlag = false;
+          });
+      },
+      showCastInfo(cast) {
+        // console.log(cast);
+        let url = `https://api.douban.com/v2/movie/celebrity/${cast.id}`;
+        this.castDialogVisible = true;
+        this.dialogLoadingFlag = true;
+
+        axios.get(url)
+          .then((res) => {
+            this.castInfo = res.data;
             this.dialogLoadingFlag = false;
           });
       }
@@ -137,6 +167,7 @@
   }
 
   .dialog-body {
+    position: relative;
     padding: 10px 20px;
   }
 
@@ -152,9 +183,18 @@
     cursor: pointer;
   }
 
-  .detail-cast-avatar {
+  .detail-dialog-avatar {
     display: inline-block; 
     text-align: center;
     margin-left: 18px;
+  }
+
+  .cast-dialog-avatar {
+    float: left;
+    margin-right: 50px;
+  }
+
+  .cast-dialog-info > div {
+    margin-bottom: 15px;
   }
 </style>
