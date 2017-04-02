@@ -21,8 +21,12 @@ npm install
 npm run dev
 
 # build for production with minification
-# 生产模式打包
+# 生产模式打包，默认存放在/dist目录下
 npm run build
+
+# remove /dist
+# 清除dist目录
+npm run clean
 
 # build for production and view the bundle analyzer report
 npm run build --report
