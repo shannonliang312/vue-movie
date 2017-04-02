@@ -6,7 +6,9 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "rimraf": "rimraf",
+    "clean": "npm run rimraf -- dist"
   },
   "dependencies": {
     "animate.css": "^3.5.2",
