@@ -65,7 +65,6 @@
     },
     methods: {
       showDialog(val) {
-        console.log(val);
         this.dialogVisible = true;
         this.dialogTitle = val.title;
         this.dialogLoading = true;

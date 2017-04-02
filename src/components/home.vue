@@ -3,11 +3,11 @@
     <transition 
       appear
       name="custom-classes-transition"
-      enter-active-class="animated rotateIn"      
+      enter-active-class="animated rubberBand"      
       >
       <h1>Find your favorate TV show!</h1>
     </transition>
-    
+    <h4 class="author">by <a href="https://github.com/shannonliang312">@shannonliang312</a></h4>
     <el-row>
       <el-col  :span="12" :offset="6">
         <input type="text" @keyup.enter="onSearch" v-model="keywords" placeholder="" id="searchInput">
@@ -119,11 +119,20 @@
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     font-family: Chewy;
     text-align: center;
     font-size: 4em;
     overflow-x: hidden;
+  }
+
+  .author {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .author > a {
+    color: aqua;
   }
 
   .oops {
@@ -137,7 +146,7 @@
     font-size: 2em;
     text-align: center;
     background-color: transparent;
-    width: 90%;
+    width: 95%;
     border: 0;
     border-bottom: white 1px solid; 
   }
