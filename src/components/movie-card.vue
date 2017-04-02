@@ -26,7 +26,10 @@
           </el-rate>
         </div> 
         <div>
-          <button class="detail-button" @click="showDetailInfo">详细信息</button>
+          <button class="customer-button" @click="showDetailInfo">详细信息</button>
+          <button class="customer-button" @click="goToDouban">前往豆瓣
+            <i class="fa fa-arrow-right" aria-hidden="true" style="margin-left:5px"></i>
+          </button>
         </div>  
       </div>    
     </div>   
@@ -35,7 +38,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
 
   export default {
     name: "movie-card",
@@ -60,7 +62,6 @@
           });
       },
       showCastInfo(cast) {
-        // console.log(cast);
         let url = `https://api.douban.com/v2/movie/celebrity/${cast.id}`;
         
         this.$emit("onDialog", {
@@ -68,10 +69,11 @@
             url: url,
             title: cast.name
           });
+      },
+      goToDouban() {
+        window.open(this.movieInfo.alt);
       }
     },
-    components: {
-    }
   }  
 </script>
 
@@ -107,14 +109,15 @@
     margin-bottom: 10px;
   }
 
-  .detail-button {
+  .customer-button {
     padding: 5px 8px;
+    margin-right: 20px;
     background-color: transparent;
     color: white;
     border-radius: 10%;
   }
 
-  .detail-button:hover {
+  .customer-button:hover {
     cursor: pointer;
   }
 
