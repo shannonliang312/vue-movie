@@ -26,51 +26,10 @@
           </el-rate>
         </div> 
         <div>
-          <!--el-button size="small" @click="showDetailInfo">详细信息</el-button-->
           <button class="detail-button" @click="showDetailInfo">详细信息</button>
         </div>  
       </div>    
-    </div>
-    <el-dialog id="detail-dialog" class="dialog-box" v-model="detailDialogVisible" :title="movieInfo.title">
-      <el-row v-if="dialogLoadingFlag">
-        正在加载中...
-      </el-row>
-      <!--<transition 
-        name="custom-classes-transition"
-        enter-active-class="animated fadeIn"      
-        >-->
-        <div class="dialog-body" v-if="!dialogLoadingFlag">
-          <div>国家：<span v-for="country in detailInfo.countries">{{country}}&nbsp;&nbsp;</span></div>
-          <div v-if="detailInfo.episodes_count">本季集数：{{detailInfo.episodes_count}}集</div>
-          <div>简介：
-            <p>{{detailInfo.summary}}</p>
-          </div>
-          <div>
-            <div v-for="cast in detailInfo.casts" class="detail-dialog-avatar">
-              <img style="border-radius: 50%;"  :src="cast.avatars.medium">
-              <div>{{cast.name}}</div>
-            </div>          
-          </div>
-        </div>
-      <!--</transition>      -->
-    </el-dialog>
-    <el-dialog id="cast-dialog" class="dialog-box" v-model="castDialogVisible" :title="castInfo.name">
-      <el-row v-if="dialogLoadingFlag">
-        正在加载中...
-      </el-row>
-      <div class="dialog-body" v-if="!dialogLoadingFlag">
-        <div class="cast-dialog-avatar">
-          <img :src="castInfo.avatars.medium" style="border-radius: 20%;">
-        </div>
-        <div class="cast-dialog-info">
-          <div v-if="castInfo.name_en">英文名：{{castInfo.name_en}}</div>
-          <div>性别：{{castInfo.gender}}</div>
-          <div>出生地：{{castInfo.born_place}}</div>
-          <div>主要作品：<span v-for="work in castInfo.works">{{work.subject.title}}&nbsp;&nbsp;</span></div>
-        </div>
-      </div>
-    </el-dialog>
-
+    </div>   
   </div>
      
 </template>
@@ -83,13 +42,6 @@
     props: ["movieInfo"],
     data() {
       return {
-        dialogVisible: false,
-        dialogLoadingFlag: true,
-        detailInfo: {},
-        castInfo: {},
-        detailDialogVisible: false,
-        castDialogVisible: false,
-        directorDialogVisible: false
       }
     },
     computed: {
@@ -101,27 +53,20 @@
       showDetailInfo() {
         let url = `https://api.douban.com/v2/movie/subject/${this.movieInfo.id}`;
         
-        this.dialogLoadingFlag = true;
-        this.detailDialogVisible = true;        
-
-        axios.get(url)
-          .then((res)=>{
-            console.log(res.data);
-            this.detailInfo = res.data;
-            this.dialogLoadingFlag = false;
+        this.$emit("onDialog", {
+            type: "detail",
+            url: url,
+            title: this.movieInfo.title
           });
       },
       showCastInfo(cast) {
         // console.log(cast);
         let url = `https://api.douban.com/v2/movie/celebrity/${cast.id}`;
         
-        this.dialogLoadingFlag = true;
-        this.castDialogVisible = true;
-
-        axios.get(url)
-          .then((res) => {
-            this.castInfo = res.data;
-            this.dialogLoadingFlag = false;
+        this.$emit("onDialog", {
+            type: "cast",
+            url: url,
+            title: cast.name
           });
       }
     },
@@ -173,16 +118,7 @@
     cursor: pointer;
   }
 
-  .dialog-body {
-    position: relative;
-    padding: 10px 20px;
-  }
-
-  .dialog-body > div {
-    padding: 10px 0
-  }
-
-  .human {
+   .human {
     color:aqua;
   }
 
@@ -190,18 +126,5 @@
     cursor: pointer;
   }
 
-  .detail-dialog-avatar {
-    display: inline-block; 
-    text-align: center;
-    margin-left: 18px;
-  }
-
-  .cast-dialog-avatar {
-    float: left;
-    margin-right: 50px;
-  }
-
-  .cast-dialog-info > div {
-    margin-bottom: 15px;
-  }
+  
 </style>
