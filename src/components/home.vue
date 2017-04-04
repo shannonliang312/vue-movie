@@ -5,7 +5,7 @@
       name="custom-classes-transition"
       enter-active-class="animated rubberBand"      
       >
-      <h1>Find your favorate TV show!</h1>
+      <h1>Find your favourate TV show!</h1>
     </transition>
     <h4 class="author">by <a href="https://github.com/shannonliang312">@shannonliang312</a></h4>
     <el-row>
@@ -21,7 +21,7 @@
       <span class="oops">Oops!</span>
       <h2>{{exceptionInfo}}</h2>
     </div>
-    <div id="movie-list"  style="padding: 50px">
+    <div id="movie-list">
       <MovieList :searchRes="searchRes"></MovieList>
     </div>
     <infinite-loading :on-infinite="onInfinite" ref="infiniteLoading" v-if="searchRes.count"></infinite-loading>
@@ -146,9 +146,15 @@
     font-size: 2em;
     text-align: center;
     background-color: transparent;
-    width: 95%;
+    width: 90%;
     border: 0;
     border-bottom: white 1px solid; 
+  }
+
+  #movie-list {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .search-icon:hover {
