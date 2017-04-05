@@ -2,7 +2,10 @@
 
 > A Vue.js project.未完待续
 
-一个简单的影视信息搜索小工具，使用的豆瓣提供的API接口～～
+一个简单的影视信息搜索小工具，使用的豆瓣提供的API接口～～  
+注意：豆瓣API貌似不支持跨域，如要正常使用，需要在chrome中安装Allow-Control-Allow-Origin插件来解决跨域问题
+  
+demo地址：[一个栗子](shannonliang.me/vue-movie)
 
 ## Build Setup
 
